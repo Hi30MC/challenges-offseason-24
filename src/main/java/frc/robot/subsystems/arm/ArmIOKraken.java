@@ -8,30 +8,27 @@ public class ArmIOKraken implements ArmIO {
   private TalonFX m_motor;
 
   public ArmIOKraken(int port) {
-    // TODO: Implement this method
+    m_motor = new TalonFX(port);
   }
 
   @Override
   public void setVoltage(double voltage) {
-    // TODO: Implement this method
+    m_motor.setVoltage(voltage);
   }
 
   @Override
   public double getVoltage() {
-    // TODO: Implement this method
-    return 0.0;
+    return m_motor.getMotorVoltage().getValueAsDouble();
   }
 
   @Override
   public double getVelocityRadiansPerSecond() {
-    // TODO: Implement this method
-    return 0.0;
+    return m_motor.getVelocity().getValueAsDouble() * 2 * Math.PI;
   }
 
   @Override
   public Rotation2d getPosition() {
-    // TODO: Implement this method
-    return null;
+    return new Rotation2d(m_motor.getPosition().getValueAsDouble() * 2 * Math.PI);
   }
 
   @Override
