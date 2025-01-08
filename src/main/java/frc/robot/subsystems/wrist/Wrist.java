@@ -8,31 +8,35 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Wrist extends SubsystemBase {
   // For instructions on how to implement this class, refer to the README.md file
 
+  private WristIO m_io;
+  private WristInputsAutoLogged m_inputs;
+  private PIDController m_controller;
+
   public Wrist(WristIO io, PIDController controller) {
-    // TODO: Implement the constructor
+    m_io = io;
+    m_inputs = new WristInputsAutoLogged();
+    m_controller = controller;
   }
 
   @Override
   public void periodic() {
-    // TODO: Implement this method
+    m_io.updateInputs(m_inputs);
+    m_io.setVoltage(m_controller.calculate(m_io.getAngle().getDegrees(), m_inputs.angleRad));
   }
 
   public void setDesiredAngle(Rotation2d angle) {
-    // TODO: Implement this method
+    m_inputs.angleRad = angle.getRadians();
   }
 
   public Command setDesiredAngleCommand(Rotation2d angle) {
-    // TODO: Implement this method
-    return null;
+    return runOnce(() -> setDesiredAngle(angle));
   }
 
   public boolean withinTolerance() {
-    // TODO: Implement this method
-    return false;
+    return m_controller.atSetpoint();
   }
 
   public WristInputsAutoLogged getInputs() {
-    // TODO: Implement this method
-    return null;
+    return m_inputs;
   }
 }
