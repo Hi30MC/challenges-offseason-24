@@ -13,8 +13,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.controller.PIDController;
 import frc.robot.oi.DriverControls;
 import frc.robot.oi.DriverControlsXbox;
+import frc.robot.subsystems.Flywheel;
+import frc.robot.subsystems.FlywheelIO;
+import frc.robot.subsystems.FlywheelInputsAutoLogged;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -27,7 +31,7 @@ public class RobotContainer {
   // For instructions on how to implement this class, refer to the README.md file
 
   // Subsystems
-  // TODO: Implement the flywheel subsystem
+  private final Flywheel m_flywheel;
 
   // Controller
   private DriverControls m_driverControls;
@@ -40,7 +44,10 @@ public class RobotContainer {
   }
 
   private void configureSubsystems() {
-    // TODO: Implement this method
+    //configure flywheel
+
+    m_flywheel = new Flywheel(new FlywheelInputsAutoLogged(), new PIDController(Constants.FlywheelConstants.kP,
+        Constants.FlywheelConstants.kI, Constants.FlywheelConstants.kD));
   }
 
   private void configureControllers() {
