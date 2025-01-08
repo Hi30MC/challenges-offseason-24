@@ -11,6 +11,7 @@ public class Wrist extends SubsystemBase {
   private WristIO m_io;
   private WristInputsAutoLogged m_inputs;
   private PIDController m_controller;
+  private double m_controllerSetpoint;
 
   public Wrist(WristIO io, PIDController controller) {
     m_io = io;
@@ -21,11 +22,11 @@ public class Wrist extends SubsystemBase {
   @Override
   public void periodic() {
     m_io.updateInputs(m_inputs);
-    m_io.setVoltage(m_controller.calculate(m_io.getAngle().getDegrees(), m_inputs.angleRad));
+    m_io.setVoltage(m_controller.calculate(m_io.getAngle().getDegrees(), m_controllerSetpoint));
   }
 
   public void setDesiredAngle(Rotation2d angle) {
-    m_inputs.angleRad = angle.getRadians();
+    m_controllerSetpoint = angle.getDegrees();
   }
 
   public Command setDesiredAngleCommand(Rotation2d angle) {
