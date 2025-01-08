@@ -17,8 +17,7 @@ import edu.wpi.first.math.controller.PIDController;
 import frc.robot.oi.DriverControls;
 import frc.robot.oi.DriverControlsXbox;
 import frc.robot.subsystems.Flywheel;
-import frc.robot.subsystems.FlywheelIO;
-import frc.robot.subsystems.FlywheelInputsAutoLogged;
+import frc.robot.subsystems.FlywheelIONeo;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -31,7 +30,7 @@ public class RobotContainer {
   // For instructions on how to implement this class, refer to the README.md file
 
   // Subsystems
-  private final Flywheel m_flywheel;
+  Flywheel m_flywheel;
 
   // Controller
   private DriverControls m_driverControls;
@@ -44,10 +43,15 @@ public class RobotContainer {
   }
 
   private void configureSubsystems() {
-    //configure flywheel
+    // configure flywheel
 
-    m_flywheel = new Flywheel(new FlywheelInputsAutoLogged(), new PIDController(Constants.FlywheelConstants.kP,
-        Constants.FlywheelConstants.kI, Constants.FlywheelConstants.kD));
+    m_flywheel =
+        new Flywheel(
+            new FlywheelIONeo(Constants.FlywheelConstants.kMotorPort),
+            new PIDController(
+                Constants.FlywheelConstants.kP,
+                Constants.FlywheelConstants.kI,
+                Constants.FlywheelConstants.kD));
   }
 
   private void configureControllers() {
@@ -55,6 +59,9 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-    // TODO: Implement this method
+    m_driverControls
+        .runFlywheel()
+        .onTrue(m_flywheel.setDesiredVelocityCommand(Constants.FlywheelConstants.kVelocitySetpoint))
+        .onFalse(m_flywheel.setDesiredVelocityCommand(0));
   }
 }
